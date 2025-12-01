@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "group": "build",
+            "command": "cargo run > image.ppm && ffmpeg -y -i image.ppm -compression_level 9 output.png",
+            "label": "run",
+            "problemMatcher": []
+        }
+    ]
+}
