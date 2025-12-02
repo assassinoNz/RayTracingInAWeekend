@@ -1,13 +1,9 @@
-use crate::ds::vec::Color3;
+use rand::{Rng, SeedableRng, rngs::SmallRng};
 
 pub fn deg2rad(deg: f64) -> f64 {
-    deg * std::f64::consts::PI / 180.0
+    deg * core::f64::consts::PI / 180.0
 }
 
-pub fn print_col(color: &Color3) {
-    let ir = (255.999 * color.r()) as u8;
-    let ig = (255.999 * color.g()) as u8;
-    let ib = (255.999 * color.b()) as u8;
-    
-    println!("{ir} {ig} {ib}");
+pub fn rand_f64() -> f64 {
+    rand::random_range(0.0..1.0)
 }

@@ -1,4 +1,5 @@
 use crate::ds::hittable::{HitRec, Hittable};
+use crate::ds::interval::Interval;
 use crate::ds::ray::Ray;
 use crate::ds::vec::Point3;
 
@@ -14,7 +15,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray, ray_t_min: f64, ray_t_max: f64) -> Option<HitRec> {
+    fn hit(&self, ray: &Ray, ray_t: &Interval) -> Option<HitRec> {
         let ref oc = &self.center - ray.origin();
         let a = ray.dir().len_sq();
         let h = ray.dir().dot(oc);
@@ -28,9 +29,9 @@ impl Hittable for Sphere {
 
         let discriminant_sqrt = discriminant.sqrt();
         let mut t = (h - discriminant_sqrt) / a;
-        if ray_t_min >= t || t >= ray_t_max {
+        if !ray_t.surrounds(t) {
             t = (h + discriminant_sqrt) / a;
-            if ray_t_min >= t || t >= ray_t_max {
+            if !ray_t.surrounds(t) {
                 //CASE: Ray doesn't hit the sphere within the given range
                 return None;
             }

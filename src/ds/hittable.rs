@@ -1,4 +1,4 @@
-use crate::ds::{ray::Ray, vec::{Point3, Vec3}};
+use crate::ds::{interval::Interval, ray::Ray, vec::{Point3, Vec3}};
 
 pub struct HitRec {
     pub t: f64,
@@ -8,5 +8,5 @@ pub struct HitRec {
 }
 
 pub trait Hittable {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRec>;
+    fn hit(&self, ray: &Ray, ray_y: &Interval) -> Option<HitRec>;
 }
