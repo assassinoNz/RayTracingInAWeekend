@@ -10,14 +10,12 @@ fn main() {
     const IMG_WIDTH: u32 = 400;
     const VIEWPORT_HEIGHT: f64 = 2.0;
     const FOCAL_LEN: f64 = 1.0;
-    const SAMPLES_PER_PIXEL: u32 = 100;
 
     let cam = Cam::new(
         ASPECT_RATIO,
         IMG_WIDTH,
         VIEWPORT_HEIGHT,
-        FOCAL_LEN,
-        SAMPLES_PER_PIXEL,
+        FOCAL_LEN
     );
     
     let ref geoms = [

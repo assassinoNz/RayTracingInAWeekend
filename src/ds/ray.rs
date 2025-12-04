@@ -24,12 +24,12 @@ impl Ray {
         &self.origin + (&self.dir * t)
     }
 
-    pub fn calc_col(&self, geoms: &[impl Hittable]) -> Color3 {
+    pub fn calc_col(&self, hittables: &[impl Hittable]) -> Color3 {
         let mut closest_hit_rec: Option<HitRec> = None;
         let mut closest_t = f64::INFINITY;
 
-        for geom in geoms {
-            if let Some(hit_rec) = geom.hit(self, &Interval::new(0.001, closest_t)) {
+        for hittable in hittables {
+            if let Some(hit_rec) = hittable.hit(self, &Interval::new(0.001, closest_t)) {
                 closest_t = hit_rec.t;
                 closest_hit_rec = Some(hit_rec);
             }

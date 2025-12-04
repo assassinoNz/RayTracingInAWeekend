@@ -1,7 +1,6 @@
 use crate::ds::hittable::Hittable;
 use crate::ds::ray::Ray;
 use crate::ds::vec::{Point3, Vec3};
-use crate::util;
 
 pub struct Cam {
     aspect_ratio: f64,
@@ -10,8 +9,7 @@ pub struct Cam {
     c00: Point3,
     p00: Point3,
     du: Vec3,
-    dv: Vec3,
-    samples_per_pixel: u32,
+    dv: Vec3
 }
 
 impl Cam {
@@ -19,8 +17,7 @@ impl Cam {
         aspect_ratio: f64,
         img_width: u32,
         viewport_height: f64,
-        focal_len: f64,
-        samples_per_pixel: u32,
+        focal_len: f64
     ) -> Cam {
         let img_height = img_width as f64 / aspect_ratio;
         let img_height = if img_height < 1.0 {
@@ -53,31 +50,38 @@ impl Cam {
             c00,
             p00,
             du,
-            dv,
-            samples_per_pixel,
+            dv
         }
     }
 
-    pub fn render(&self, geoms: &[impl Hittable]) {
+    pub fn render(&self, hittables: &[impl Hittable]) {
         println!("P3\n{} {}\n255", self.img_width, self.img_height);
+
+        let ref third_of_du = &self.du / 3.0;
+        let ref third_of_dv = &self.dv / 3.0;
+
         for j in 0..self.img_height {
             for i in 0..self.img_width {
                 let i = i as f64;
                 let j = j as f64;
 
-                let mut color = Vec3::new(0.0, 0.0, 0.0);
-                for _ in 0..self.samples_per_pixel {
-                    let offset = Vec3::new(util::rand_f64() - 0.5, util::rand_f64() - 0.5, 0.0);
-                    let pij_sample =
-                        &self.p00 + (&self.du * (i + offset.x())) + (&self.dv * (j + offset.y()));
+                let pij_center = &self.p00 + (&self.du * i) + (&self.dv * j);
+                let pij_samples = [
+                    &pij_center + third_of_du + third_of_dv, //pij_sample_bottom_right
+                    &pij_center + third_of_du - third_of_dv, //pij_sample_top_right
+                    &pij_center - third_of_du - third_of_dv, //pij_sample_top_left
+                    &pij_center - third_of_du + third_of_dv, //pij_sample_bottom_left
+                    pij_center,                                //pij_center
+                ];
 
+                let mut color = Vec3::new(0.0, 0.0, 0.0);
+                for pij_sample in &pij_samples {
                     let ray_dir = pij_sample - &self.c00;
                     let ray = Ray::new(self.c00.clone(), ray_dir);
-
-                    color += &ray.calc_col(geoms);
+                    color += &ray.calc_col(hittables);
                 }
 
-                color /= self.samples_per_pixel as f64;
+                color /= pij_samples.len() as f64;
 
                 let ir = (255.999 * color.r()) as u8;
                 let ig = (255.999 * color.g()) as u8;
