@@ -45,7 +45,11 @@ impl Hittable for Sphere {
             t,
             ray_at_t,
             is_front_face,
-            normal: if is_front_face { outward_normal } else { -outward_normal }
+            normal: if is_front_face {
+                outward_normal
+            } else {
+                -outward_normal
+            },
         };
 
         Some(hit_rec)

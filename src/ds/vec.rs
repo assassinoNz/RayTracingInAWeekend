@@ -13,7 +13,7 @@ impl Vec3 {
         self.0 * self.0 + self.1 * self.1 + self.2 * self.2
     }
 
-    pub fn len(&self) -> f64 {
+    pub fn magnitude(&self) -> f64 {
         self.len_sq().sqrt()
     }
 
@@ -30,7 +30,7 @@ impl Vec3 {
     }
 
     pub fn unit_vec(&self) -> Vec3 {
-        self / self.len()
+        self / self.magnitude()
     }
 }
 

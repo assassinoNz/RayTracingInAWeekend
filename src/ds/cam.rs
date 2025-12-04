@@ -1,9 +1,7 @@
-use crate::{
-    ds::{
-        hittable::Hittable, interval::Interval, ray::Ray, vec::{Point3, Vec3}
-    },
-    util,
-};
+use crate::ds::hittable::Hittable;
+use crate::ds::ray::Ray;
+use crate::ds::vec::{Point3, Vec3};
+use crate::util;
 
 pub struct Cam {
     aspect_ratio: f64,
@@ -13,11 +11,17 @@ pub struct Cam {
     p00: Point3,
     du: Vec3,
     dv: Vec3,
-    samples_per_pixel: u32
+    samples_per_pixel: u32,
 }
 
 impl Cam {
-    pub fn new(aspect_ratio: f64, img_width: u32, viewport_height: f64, focal_len: f64, samples_per_pixel: u32) -> Cam {
+    pub fn new(
+        aspect_ratio: f64,
+        img_width: u32,
+        viewport_height: f64,
+        focal_len: f64,
+        samples_per_pixel: u32,
+    ) -> Cam {
         let img_height = img_width as f64 / aspect_ratio;
         let img_height = if img_height < 1.0 {
             1
@@ -50,7 +54,7 @@ impl Cam {
             p00,
             du,
             dv,
-            samples_per_pixel
+            samples_per_pixel,
         }
     }
 
@@ -64,7 +68,8 @@ impl Cam {
                 let mut color = Vec3::new(0.0, 0.0, 0.0);
                 for _ in 0..self.samples_per_pixel {
                     let offset = Vec3::new(util::rand_f64() - 0.5, util::rand_f64() - 0.5, 0.0);
-                    let pij_sample = &self.p00 + (&self.du * (i + offset.x())) + (&self.dv * (j + offset.y()));
+                    let pij_sample =
+                        &self.p00 + (&self.du * (i + offset.x())) + (&self.dv * (j + offset.y()));
 
                     let ray_dir = pij_sample - &self.c00;
                     let ray = Ray::new(self.c00.clone(), ray_dir);

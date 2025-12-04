@@ -1,6 +1,6 @@
-use crate::ds::{hittable::{HitRec, Hittable}, interval::Interval, vec::Color3};
-
-use super::vec::{Point3, Vec3};
+use crate::ds::hittable::{HitRec, Hittable};
+use crate::ds::interval::Interval;
+use crate::ds::vec::{Color3, Point3, Vec3};
 
 pub struct Ray {
     origin: Point3,

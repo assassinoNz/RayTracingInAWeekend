@@ -1,10 +1,9 @@
 mod ds;
 mod util;
 
-use ds::vec::Point3;
+use ds::cam::Cam;
 use ds::geom::Sphere;
-
-use crate::ds::cam::Cam;
+use ds::vec::Point3;
 
 fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
@@ -13,7 +12,14 @@ fn main() {
     const FOCAL_LEN: f64 = 1.0;
     const SAMPLES_PER_PIXEL: u32 = 100;
 
-    let cam = Cam::new(ASPECT_RATIO, IMG_WIDTH, VIEWPORT_HEIGHT, FOCAL_LEN, SAMPLES_PER_PIXEL);
+    let cam = Cam::new(
+        ASPECT_RATIO,
+        IMG_WIDTH,
+        VIEWPORT_HEIGHT,
+        FOCAL_LEN,
+        SAMPLES_PER_PIXEL,
+    );
+    
     let ref geoms = [
         Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0),
         Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5),
