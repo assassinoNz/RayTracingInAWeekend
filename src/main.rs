@@ -3,7 +3,7 @@ mod util;
 
 use ds::cam::Cam;
 use ds::geom::Sphere;
-use ds::vec::Point3;
+use ds::point::Point3;
 
 fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
@@ -19,8 +19,8 @@ fn main() {
     );
     
     let ref geoms = [
-        Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0),
         Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5),
+        Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0),
     ];
 
     cam.render(geoms);

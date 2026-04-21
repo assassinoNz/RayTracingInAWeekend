@@ -1,46 +1,28 @@
-use crate::ds::hittable::{HitRec, Hittable};
-use crate::ds::interval::Interval;
-use crate::ds::vec::{Color3, Point3, Vec3};
+use crate::ds::point::Point3;
+use crate::ds::vec::Vec3;
 
-pub struct Ray {
+pub struct Ray3 {
     origin: Point3,
-    dir: Vec3,
+    vec: Vec3,
 }
 
-impl Ray {
-    pub fn new(origin: Point3, dir: Vec3) -> Ray {
-        Ray { origin, dir }
+impl Ray3 {
+    pub fn new(origin: Point3, vec: Vec3) -> Ray3 {
+        Ray3 { origin, vec }
     }
 
     pub fn origin(&self) -> &Point3 {
         &self.origin
     }
 
-    pub fn dir(&self) -> &Vec3 {
-        &self.dir
+    pub fn vec(&self) -> &Vec3 {
+        &self.vec
     }
 
-    pub fn at(&self, t: f64) -> Point3 {
-        &self.origin + (&self.dir * t)
-    }
-
-    pub fn calc_col(&self, hittables: &[impl Hittable]) -> Color3 {
-        let mut closest_hit_rec: Option<HitRec> = None;
-        let mut closest_t = f64::INFINITY;
-
-        for hittable in hittables {
-            if let Some(hit_rec) = hittable.hit(self, &Interval::new(0.001, closest_t)) {
-                closest_t = hit_rec.t;
-                closest_hit_rec = Some(hit_rec);
-            }
-        }
-
-        if let Some(hit_rec) = closest_hit_rec {
-            return (hit_rec.normal + Color3::new(1.0, 1.0, 1.0)) * 0.5;
-        }
-
-        let ref unit_direction = self.dir().unit_vec();
-        let a = 0.5 * (unit_direction.y() + 1.0);
-        Color3::new(1.0, 1.0, 1.0) * (1.0 - a) + Color3::new(0.5, 0.7, 1.0) * a
+    /**
+     * Returns the point after traveling t times the underlying vector length
+     */
+    pub fn cast(&self, t: f64) -> Point3 {
+        &self.origin + (&self.vec * t)
     }
 }
