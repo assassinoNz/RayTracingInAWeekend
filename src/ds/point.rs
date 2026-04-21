@@ -97,14 +97,6 @@ impl core::ops::Sub<&Point3> for &Point3 {
 }
 
 impl Point3 {
-    pub fn origin() -> Point3 {
-        Point3(Vec3::new(0.0, 0.0, 0.0))
-    }
-
-    pub fn new(x: f64, y: f64, z: f64) -> Point3 {
-        Point3(Vec3::new(x, y, z))
-    }
-
     pub fn x(&self) -> f64 {
         self.0.x()
     }
@@ -115,5 +107,15 @@ impl Point3 {
 
     pub fn z(&self) -> f64 {
         self.0.z()
+    }
+}
+
+impl Point3 {
+    pub fn origin() -> Point3 {
+        Point3(Vec3::new(0.0, 0.0, 0.0))
+    }
+
+    pub fn new(x: f64, y: f64, z: f64) -> Point3 {
+        Point3(Vec3::new(x, y, z))
     }
 }

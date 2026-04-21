@@ -175,10 +175,6 @@ impl core::ops::Div<f64> for &Vec3 {
 }
 
 impl Vec3 {
-    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3(x, y, z)
-    }
-
     pub fn x(&self) -> f64 {
         self.0
     }
@@ -224,29 +220,15 @@ impl Vec3 {
     }
 }
 
+impl Vec3 {
+    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
+        Vec3(x, y, z)
+    }
+}
+
 pub type Color3 = Vec3;
 
 impl Color3 {
-    pub fn black() -> Color3 {
-        Color3::new(0.0, 0.0, 0.0)
-    }
-
-    pub fn white() -> Color3 {
-        Color3::new(1.0, 1.0, 1.0)
-    }
-
-    pub fn red() -> Color3 {
-        Color3::new(1.0, 0.0, 0.0)
-    }
-
-    pub fn green() -> Color3 {
-        Color3::new(0.0, 1.0, 0.0)
-    }
-
-    pub fn blue() -> Color3 {
-        Color3::new(0.0, 0.0, 1.0)
-    }
-
     pub fn r(&self) -> f64 {
         self.x()
     }
@@ -257,5 +239,27 @@ impl Color3 {
 
     pub fn b(&self) -> f64 {
         self.z()
+    }
+}
+
+impl Color3 {
+    pub fn black() -> Color3 {
+        Vec3(0.0, 0.0, 0.0)
+    }
+
+    pub fn white() -> Color3 {
+        Vec3(1.0, 1.0, 1.0)
+    }
+
+    pub fn red() -> Color3 {
+        Vec3(1.0, 0.0, 0.0)
+    }
+
+    pub fn green() -> Color3 {
+        Vec3(0.0, 1.0, 0.0)
+    }
+
+    pub fn blue() -> Color3 {
+        Vec3(0.0, 0.0, 1.0)
     }
 }

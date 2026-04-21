@@ -7,10 +7,6 @@ pub struct Ray3 {
 }
 
 impl Ray3 {
-    pub fn new(origin: Point3, vec: Vec3) -> Ray3 {
-        Ray3 { origin, vec }
-    }
-
     pub fn origin(&self) -> &Point3 {
         &self.origin
     }
@@ -20,9 +16,15 @@ impl Ray3 {
     }
 
     /**
-     * Returns the point after traveling t times the underlying vector length
+     * Returns the point after traveling "step" steps of vec length toward the vec direction
      */
-    pub fn cast(&self, t: f64) -> Point3 {
-        &self.origin + (&self.vec * t)
+    pub fn cast(&self, step: f64) -> Point3 {
+        &self.origin + (&self.vec * step)
+    }
+}
+
+impl Ray3 {
+    pub fn new(origin: Point3, vec: Vec3) -> Ray3 {
+        Ray3 { origin, vec }
     }
 }

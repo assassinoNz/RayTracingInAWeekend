@@ -15,7 +15,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray3, ray_t: &Interval) -> Option<HitResult> {
+    fn hit(&self, ray: &Ray3, step_range: &Interval) -> Option<HitResult> {
         let ref oc = &self.center - ray.origin();
         let a = ray.vec().len_sq();
         let h = ray.vec().dot(oc);
@@ -29,9 +29,9 @@ impl Hittable for Sphere {
 
         let discriminant_sqrt = discriminant.sqrt();
         let mut t = (h - discriminant_sqrt) / a;
-        if !ray_t.surrounds(t) {
+        if !step_range.surrounds(t) {
             t = (h + discriminant_sqrt) / a;
-            if !ray_t.surrounds(t) {
+            if !step_range.surrounds(t) {
                 //CASE: Ray doesn't hit the sphere within the given range
                 return None;
             }
