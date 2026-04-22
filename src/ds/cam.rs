@@ -1,4 +1,4 @@
-use crate::ds::hittable::{HitResult, Hittable};
+use crate::ds::hittable::{HitRecord, Hittable};
 use crate::ds::interval::Interval;
 use crate::ds::point::Point3;
 use crate::ds::vec::{Vec3, Color3};
@@ -72,17 +72,17 @@ impl Cam {
 
                 let mut pij_color: Color3 = Color3::black();
                 for pij_position in &pij_positions {
-                    let ray_dir = pij_position - &self.c;
-                    let ref ray = ray_dir.fix(&self.c);
+                    let ray_vec = pij_position - &self.c;
+                    let ref ray = ray_vec.fix(self.c.clone());
 
-                    let mut closest_hit_rec: Option<HitResult> = None;
+                    let mut closest_hit_rec: Option<HitRecord> = None;
                     let mut closest_t = f64::INFINITY;
 
                     for hittable in hittables {
                         let ref interval = Interval::new(0.001, closest_t);
                         if let Some(hit_res) = hittable.hit(ray, interval) {
                             //CASE: A closer hit that the previous was found
-                            closest_t = hit_res.t;
+                            closest_t = hit_res.ray_step;
                             closest_hit_rec = Some(hit_res);
                         }
                     }
@@ -90,13 +90,13 @@ impl Cam {
                     if let Some(hit_res) = closest_hit_rec {
                         //CASE: A hit result was found
                         //Pixel must represent the surface color of te hittable object
-                        let pij_position_color: Color3 = hit_res.normal + Color3::white() * 0.5;
+                        let pij_position_color: Color3 = hit_res.normal.as_vec() + Color3::white() * 0.5;
                         pij_color = pij_color + pij_position_color;
                     } else {
                         //CASE: No hit result was found
                         //Consider the pixel as representing the background color
-                        let ref ray_unit_direction = ray.vec().unit();
-                        let a = 0.5 * (ray_unit_direction.y() + 1.0);
+                        let ray_dir = ray.vec().clone().unit();
+                        let a = 0.5 * (ray_dir.y() + 1.0);
                         let pij_position_color: Color3 = Color3::white() * (1.0 - a) + Color3::new(0.5, 0.7, 1.0) * a;
                         pij_color = pij_color + pij_position_color;
                     }

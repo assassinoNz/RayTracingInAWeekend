@@ -126,6 +126,31 @@ impl core::ops::Add<&Vec3> for &Vec3 {
     }
 }
 
+impl core::ops::MulAssign<&Vec3> for Vec3 {
+    fn mul_assign(&mut self, rhs: &Vec3) {
+        self.0 *= rhs.0;
+        self.1 *= rhs.1;
+        self.2 *= rhs.2;
+    }
+}
+
+impl core::ops::Mul<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(mut self, rhs: Vec3) -> Vec3 {
+        self.mul_assign(&rhs);
+        self
+    }
+}
+
+impl core::ops::Mul<&Vec3> for &Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: &Vec3) -> Vec3 {
+        Vec3(self.0 * rhs.0, self.1 * rhs.1, self.2 * rhs.2)
+    }
+}
+
 impl core::ops::MulAssign<f64> for Vec3 {
     fn mul_assign(&mut self, rhs: f64) {
         self.0 *= rhs;
@@ -207,16 +232,12 @@ impl Vec3 {
         )
     }
 
-    pub fn hadamard(&self, rhs: &Vec3) -> Vec3 {
-        Vec3(self.0 * rhs.0, self.1 * rhs.1, self.2 * rhs.2)
+    pub fn unit(self) -> UnitVec3 {
+        UnitVec3::new(self)
     }
 
-    pub fn unit(&self) -> Vec3 {
-        self / self.len()
-    }
-
-    pub fn fix(&self, origin: &Point3) -> Ray3 {
-        Ray3::new(origin.clone(), self.clone())
+    pub fn fix(self, origin: Point3) -> Ray3 {
+        Ray3::new(origin, self)
     }
 }
 
@@ -261,5 +282,50 @@ impl Color3 {
 
     pub fn blue() -> Color3 {
         Vec3(0.0, 0.0, 1.0)
+    }
+}
+
+pub struct UnitVec3(Vec3);
+
+impl core::ops::Deref for UnitVec3 {
+    type Target = Vec3;
+
+    fn deref(&self) -> &Vec3 {
+        &self.0
+    }
+}
+
+impl core::ops::Neg for UnitVec3 {
+    type Output = UnitVec3;
+
+    fn neg(mut self) -> UnitVec3 {
+        self.0.0 = self.0.0.neg();
+        self.0.1 = self.0.1.neg();
+        self.0.2 = self.0.2.neg();
+        self
+    }
+}
+
+impl core::ops::Neg for &UnitVec3 {
+    type Output = UnitVec3;
+
+    fn neg(self) -> UnitVec3 {
+        unsafe { UnitVec3::from_vec(self.as_vec().neg()) }
+    }
+}
+
+impl UnitVec3 {
+    pub fn as_vec(&self) -> &Vec3 {
+        &self.0
+    }
+}
+
+impl UnitVec3 {
+    pub fn new(vec: Vec3) -> Self {
+        UnitVec3(&vec / vec.len())
+    }
+
+    pub unsafe fn from_vec(vec: Vec3) -> Self {
+        UnitVec3(vec)
     }
 }
