@@ -232,11 +232,11 @@ impl Vec3 {
         )
     }
 
-    pub fn unit(self) -> UnitVec3 {
-        UnitVec3::new(self)
+    pub fn into_unit(self) -> UnitVec3 {
+        UnitVec3(&self / self.len())
     }
 
-    pub fn fix(self, origin: Point3) -> Ray3 {
+    pub fn into_ray(self, origin: Point3) -> Ray3 {
         Ray3::new(origin, self)
     }
 }
@@ -310,7 +310,7 @@ impl core::ops::Neg for &UnitVec3 {
     type Output = UnitVec3;
 
     fn neg(self) -> UnitVec3 {
-        unsafe { UnitVec3::from_vec(self.as_vec().neg()) }
+        unsafe { UnitVec3::new_unchecked(self.as_vec().neg()) }
     }
 }
 
@@ -321,11 +321,7 @@ impl UnitVec3 {
 }
 
 impl UnitVec3 {
-    pub fn new(vec: Vec3) -> Self {
-        UnitVec3(&vec / vec.len())
-    }
-
-    pub unsafe fn from_vec(vec: Vec3) -> Self {
-        UnitVec3(vec)
+    pub unsafe fn new_unchecked(vec: Vec3) -> Self {
+        Self(vec)
     }
 }

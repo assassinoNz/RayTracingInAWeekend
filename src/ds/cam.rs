@@ -73,7 +73,7 @@ impl Cam {
                 let mut pij_color: Color3 = Color3::black();
                 for pij_position in &pij_positions {
                     let ray_vec = pij_position - &self.c;
-                    let ref ray = ray_vec.fix(self.c.clone());
+                    let ref ray = ray_vec.into_ray(self.c.clone());
 
                     let mut closest_hit_rec: Option<HitRecord> = None;
                     let mut closest_t = f64::INFINITY;
@@ -95,7 +95,7 @@ impl Cam {
                     } else {
                         //CASE: No hit result was found
                         //Consider the pixel as representing the background color
-                        let ray_dir = ray.vec().clone().unit();
+                        let ray_dir = ray.vec().clone().into_unit();
                         let a = 0.5 * (ray_dir.y() + 1.0);
                         let pij_position_color: Color3 = Color3::white() * (1.0 - a) + Color3::new(0.5, 0.7, 1.0) * a;
                         pij_color = pij_color + pij_position_color;

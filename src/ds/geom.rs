@@ -43,7 +43,7 @@ impl Hittable for Sphere {
 
         let hit_point = ray.cast(ray_step);
         let outward_normal =
-            unsafe { UnitVec3::from_vec((&hit_point - &self.center) / self.radius) };
+            unsafe { UnitVec3::new_unchecked((&hit_point - &self.center) / self.radius) };
         let is_front_face = ray.vec().dot(&outward_normal) < 0.0;
 
         let hit_rec = HitRecord {
