@@ -1,4 +1,4 @@
-use crate::ds::hittable::{HitRecord, Hittable};
+use crate::ds::hittable::{HitBouncePointRecord, HitRecord, Hittable};
 use crate::ds::interval::Interval;
 use crate::ds::point::Point3;
 use crate::ds::ray::Ray3;
@@ -47,8 +47,8 @@ impl Hittable for Sphere {
         let is_front_face = ray.vec().dot(&outward_normal) < 0.0;
 
         let hit_rec = HitRecord {
-            hit_distance,
-            hit_point,
+            distance: hit_distance,
+            point: hit_point,
             is_front_face,
             normal: if is_front_face {
                 outward_normal

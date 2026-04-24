@@ -4,8 +4,8 @@ use crate::ds::ray::Ray3;
 use crate::ds::vec::{UnitVec3};
 
 pub struct HitRecord {
-    pub hit_point: Point3,
-    pub hit_distance: f64,
+    pub point: Point3,
+    pub distance: f64,
     pub is_front_face: bool,
 
     /** The normal against the ray direction */

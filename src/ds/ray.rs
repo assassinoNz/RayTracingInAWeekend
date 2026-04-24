@@ -38,7 +38,7 @@ impl Ray3 {
 
             if let Some(hit_rec) = hittable.hit(self, hit_range) {
                 //CASE: A closer hit that the previous was found
-                closest_hit_distance = hit_rec.hit_distance;
+                closest_hit_distance = hit_rec.distance;
                 closest_hit_rec = Some(hit_rec);
             }
         }
@@ -58,7 +58,7 @@ impl Ray3 {
                 }
             };
 
-            let ref bounce_ray = bounce_vec.into_ray(hit_rec.hit_point);
+            let ref bounce_ray = bounce_vec.into_ray(hit_rec.point);
             let ray_color = bounce_ray.calc_color(hittables, depth - 1);
             ray_color * 0.5
         } else {
