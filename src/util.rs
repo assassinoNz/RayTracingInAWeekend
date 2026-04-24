@@ -1,4 +1,4 @@
-pub fn deg2rad(deg: f64) -> f64 {
+pub fn deg_2_rad(deg: f64) -> f64 {
     deg * core::f64::consts::PI / 180.0
 }
 

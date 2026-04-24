@@ -32,14 +32,14 @@ impl Interval {
         Interval { start, end }
     }
 
-    pub fn empty() -> Interval {
+    pub fn new_empty() -> Interval {
         Interval {
             start: f64::INFINITY,
             end: f64::NEG_INFINITY,
         }
     }
 
-    pub fn infinite() -> Interval {
+    pub fn new_infinite() -> Interval {
         Interval {
             start: f64::NEG_INFINITY,
             end: f64::INFINITY,

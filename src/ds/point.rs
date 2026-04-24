@@ -1,6 +1,7 @@
 use std::ops::{AddAssign, SubAssign};
 
 use crate::ds::vec::Vec3;
+use crate::util::rand_f64;
 
 pub struct Point3(Vec3);
 
@@ -111,11 +112,11 @@ impl Point3 {
 }
 
 impl Point3 {
-    pub fn origin() -> Point3 {
-        Point3(Vec3::new(0.0, 0.0, 0.0))
-    }
-
     pub fn new(x: f64, y: f64, z: f64) -> Point3 {
         Point3(Vec3::new(x, y, z))
+    }
+
+    pub fn new_origin() -> Point3 {
+        Point3(Vec3::new(0.0, 0.0, 0.0))
     }
 }

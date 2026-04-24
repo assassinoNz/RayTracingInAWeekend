@@ -264,23 +264,23 @@ impl Color3 {
 }
 
 impl Color3 {
-    pub fn black() -> Color3 {
+    pub fn new_black() -> Color3 {
         Vec3(0.0, 0.0, 0.0)
     }
 
-    pub fn white() -> Color3 {
+    pub fn new_white() -> Color3 {
         Vec3(1.0, 1.0, 1.0)
     }
 
-    pub fn red() -> Color3 {
+    pub fn new_red() -> Color3 {
         Vec3(1.0, 0.0, 0.0)
     }
 
-    pub fn green() -> Color3 {
+    pub fn new_green() -> Color3 {
         Vec3(0.0, 1.0, 0.0)
     }
 
-    pub fn blue() -> Color3 {
+    pub fn new_blue() -> Color3 {
         Vec3(0.0, 0.0, 1.0)
     }
 }
