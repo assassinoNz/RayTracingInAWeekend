@@ -47,16 +47,7 @@ impl Ray3 {
             //CASE: A hit result was found
             //Pixel must represent the color of the ray
 
-            let bounce_vec = {
-                let rand_vec = UnitVec3::new_rand();
-
-                //Adjust the rand unit vec to point outwards of the sphere
-                if rand_vec.dot(&hit_rec.normal) > 0.0 {
-                    rand_vec
-                } else {
-                    -rand_vec
-                }
-            };
+            let bounce_vec = UnitVec3::new_rand().as_vec() + hit_rec.normal.as_vec();
 
             let ref bounce_ray = bounce_vec.into_ray(hit_rec.point);
             let ray_color = bounce_ray.calc_color(hittables, depth - 1);

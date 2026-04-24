@@ -1,4 +1,4 @@
-use crate::ds::hittable::{HitBouncePointRecord, HitRecord, Hittable};
+use crate::ds::hittable::{HitRecord, Hittable};
 use crate::ds::interval::Interval;
 use crate::ds::point::Point3;
 use crate::ds::ray::Ray3;

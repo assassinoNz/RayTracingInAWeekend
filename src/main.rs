@@ -10,8 +10,8 @@ fn main() {
     const IMG_WIDTH: u32 = 400;
     const VIEWPORT_HEIGHT: f64 = 2.0;
     const FOCAL_LEN: f64 = 1.0;
-    const PIJ_SAMPLE_COUNT: u8 = 5;
-    const MAX_DEPTH: u8 = 2;
+    const PIJ_SAMPLE_COUNT: u8 = 10;
+    const MAX_DEPTH: u8 = 50;
 
     let cam = Cam::new(
         ASPECT_RATIO,
