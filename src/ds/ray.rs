@@ -30,14 +30,16 @@ impl Ray3 {
         }
 
         let mut closest_hit_rec: Option<HitRecord> = None;
-        let mut closest_t = f64::INFINITY;
+        let mut closest_hit_distance = f64::INFINITY;
 
         for hittable in hittables {
-            let ref interval = Interval::new(0.001, closest_t);
-            if let Some(hit_res) = hittable.hit(self, interval) {
+            //NOTE: Hit range starts at 0.001 to prevent shadow acne
+            let ref hit_range = Interval::new(0.001, closest_hit_distance);
+
+            if let Some(hit_rec) = hittable.hit(self, hit_range) {
                 //CASE: A closer hit that the previous was found
-                closest_t = hit_res.ray_step;
-                closest_hit_rec = Some(hit_res);
+                closest_hit_distance = hit_rec.hit_distance;
+                closest_hit_rec = Some(hit_rec);
             }
         }
 
@@ -45,7 +47,6 @@ impl Ray3 {
             //CASE: A hit result was found
             //Pixel must represent the color of the ray
 
-            //NOTE: DON'T WORK
             let bounce_vec = {
                 let rand_vec = UnitVec3::new_rand();
 

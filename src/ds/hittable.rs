@@ -4,8 +4,8 @@ use crate::ds::ray::Ray3;
 use crate::ds::vec::{UnitVec3};
 
 pub struct HitRecord {
-    pub ray_step: f64,
     pub hit_point: Point3,
+    pub hit_distance: f64,
     pub is_front_face: bool,
 
     /** The normal against the ray direction */
@@ -13,5 +13,5 @@ pub struct HitRecord {
 }
 
 pub trait Hittable {
-    fn hit(&self, ray: &Ray3, ray_t: &Interval) -> Option<HitRecord>;
+    fn hit(&self, ray: &Ray3, hit_range: &Interval) -> Option<HitRecord>;
 }

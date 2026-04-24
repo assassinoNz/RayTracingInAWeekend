@@ -75,6 +75,7 @@ impl Cam {
                 let i = i as f64;
                 let j = j as f64;
 
+                //Generate samples for pij
                 let get_pij_sample = || {
                     let rand_offset = (rand_f64() - 0.5, rand_f64() - 0.5);
                     &self.p00_center
@@ -85,19 +86,18 @@ impl Cam {
                     .take(self.pij_sample_count as usize)
                     .collect();
 
+                //Calculate the average color of pij
                 let mut pij_color: Color3 = Color3::new_black();
-
                 for pij_sample in &pij_samples {
                     let ref ray = (pij_sample - &self.c).into_ray(self.c.clone());
                     pij_color = pij_color + ray.calc_color(hittables, self.max_depth);
                 }
-
                 pij_color /= self.pij_sample_count as f64;
 
+                //Print pij color
                 let ir = (256.0 * pij_color.r().clamp(0.0, 0.999)) as u8;
                 let ig = (256.0 * pij_color.g().clamp(0.0, 0.999)) as u8;
                 let ib = (256.0 * pij_color.b().clamp(0.0, 0.999)) as u8;
-
                 println!("{ir} {ig} {ib}");
             }
         }

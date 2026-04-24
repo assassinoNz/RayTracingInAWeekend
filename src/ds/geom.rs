@@ -16,7 +16,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray3, step_range: &Interval) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray3, hit_range: &Interval) -> Option<HitRecord> {
         let ref oc = &self.center - ray.origin();
         let a = ray.vec().len_sq();
         let h = ray.vec().dot(oc);
@@ -30,24 +30,24 @@ impl Hittable for Sphere {
 
         //CASE: Ray hits the sphere
         let discriminant_sqrt = discriminant.sqrt();
-        let mut ray_step = (h - discriminant_sqrt) / a;
-        if !step_range.surrounds(ray_step) {
+        let mut hit_distance = (h - discriminant_sqrt) / a;
+        if !hit_range.surrounds(hit_distance) {
             //CASE: Ray doesn't hit the sphere within the given step range
             //Check the other answer for the step
-            ray_step = (h + discriminant_sqrt) / a;
-            if !step_range.surrounds(ray_step) {
+            hit_distance = (h + discriminant_sqrt) / a;
+            if !hit_range.surrounds(hit_distance) {
                 //CASE: Ray doesn't hit the sphere within the given range
                 return None;
             }
         }
 
-        let hit_point = ray.cast(ray_step);
+        let hit_point = ray.cast(hit_distance);
         let outward_normal =
             unsafe { UnitVec3::new_unchecked((&hit_point - &self.center) / self.radius) };
         let is_front_face = ray.vec().dot(&outward_normal) < 0.0;
 
         let hit_rec = HitRecord {
-            ray_step,
+            hit_distance,
             hit_point,
             is_front_face,
             normal: if is_front_face {
