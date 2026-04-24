@@ -10,14 +10,16 @@ fn main() {
     const IMG_WIDTH: u32 = 400;
     const VIEWPORT_HEIGHT: f64 = 2.0;
     const FOCAL_LEN: f64 = 1.0;
-    const SAMPLE_COUNT_PER_PIXEL: u8 = 5;
+    const PIJ_SAMPLE_COUNT: u8 = 5;
+    const MAX_DEPTH: u8 = 2;
 
     let cam = Cam::new(
         ASPECT_RATIO,
         IMG_WIDTH,
         VIEWPORT_HEIGHT,
         FOCAL_LEN,
-        SAMPLE_COUNT_PER_PIXEL
+        PIJ_SAMPLE_COUNT,
+        MAX_DEPTH,
     );
     
     let ref geoms = [

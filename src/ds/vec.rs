@@ -2,6 +2,7 @@ use core::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 use crate::ds::point::Point3;
 use crate::ds::ray::Ray3;
+use crate::util::{rand_f64, rand_f64_clamped};
 
 #[repr(C)]
 #[repr(align(16))]
@@ -245,6 +246,18 @@ impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
         Vec3(x, y, z)
     }
+
+    pub fn new_rand() -> Vec3 {
+        Vec3(rand_f64(), rand_f64(), rand_f64())
+    }
+
+    pub fn new_rand_clamped(min: f64, max: f64) -> Vec3 {
+        Vec3(
+            rand_f64_clamped(min, max),
+            rand_f64_clamped(min, max),
+            rand_f64_clamped(min, max),
+        )
+    }
 }
 
 pub type Color3 = Vec3;
@@ -318,10 +331,24 @@ impl UnitVec3 {
     pub fn as_vec(&self) -> &Vec3 {
         &self.0
     }
+
+    pub fn into_ray(self, origin: Point3) -> Ray3 {
+        Ray3::new(origin, self.0)
+    }
 }
 
 impl UnitVec3 {
     pub unsafe fn new_unchecked(vec: Vec3) -> Self {
         Self(vec)
+    }
+
+    pub fn new_rand() -> UnitVec3 {
+        loop {
+            let rand_clamped_vec = Vec3::new_rand_clamped(-1.0, 1.0);
+            let len_sq = rand_clamped_vec.len_sq();
+            if 1e-160 < len_sq && len_sq <= 1.0 {
+                return UnitVec3(rand_clamped_vec / len_sq.sqrt());
+            }
+        }
     }
 }
