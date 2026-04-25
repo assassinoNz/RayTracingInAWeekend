@@ -4,15 +4,15 @@ use crate::util::{deg_2_rad, rand_f64};
 use crate::vec::{Color3, UnitVec3, Vec3};
 
 const ASPECT_RATIO: f64 = 16.0 / 9.0;
-const IMG_WIDTH: u32 = 400;
+const IMG_WIDTH: u32 = 1200;
 const V_FOV: f64 = 20.0;
-const LOOK_FROM: Point3 = Point3::new(-2.0, 2.0, 1.0);
-const LOOK_AT: Point3 = Point3::new(0.0, 0.0, -1.0);
+const LOOK_FROM: Point3 = Point3::new(13.0, 2.0, 3.0);
+const LOOK_AT: Point3 = Point3::new(0.0, 0.0, 0.0);
 const V_UP: Vec3 = Vec3::new(0.0, 1.0, 0.0);
-const PIJ_SAMPLE_COUNT: u8 = 10;
+const PIJ_SAMPLE_COUNT: u16 = 500;
 const MAX_DEPTH: u8 = 50;
-const DEFOCUS_ANGLE: f64 = 10.0;
-const FOCUS_DIST: f64 = 3.4;
+const DEFOCUS_ANGLE: f64 = 0.6;
+const FOCUS_DIST: f64 = 10.0;
 
 pub struct Cam {
     aspect_ratio: f64,
@@ -25,7 +25,7 @@ pub struct Cam {
     w: UnitVec3,
     u: UnitVec3,
     v: Vec3,
-    pij_sample_count: u8,
+    pij_sample_count: u16,
     pixel_samples_scale: f64,
     max_depth: u8,
     defocus_angle: f64,

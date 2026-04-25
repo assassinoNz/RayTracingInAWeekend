@@ -8,7 +8,7 @@ pub struct Lambertian {
 }
 
 impl Lambertian {
-    pub fn new(albedo: Color3) -> Lambertian {
+    pub const fn new(albedo: Color3) -> Lambertian {
         Lambertian { albedo }
     }
 }

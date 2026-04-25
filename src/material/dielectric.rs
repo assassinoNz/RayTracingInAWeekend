@@ -12,7 +12,7 @@ pub struct Dielectric {
 }
 
 impl Dielectric {
-    pub fn new(rel_ref_idx: f64) -> Dielectric {
+    pub const fn new(rel_ref_idx: f64) -> Dielectric {
         Dielectric { rel_ref_idx }
     }
 }

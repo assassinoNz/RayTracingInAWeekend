@@ -11,7 +11,7 @@ pub enum Mesh {
 }
 
 impl Mesh {
-    pub fn new_sphere(center: Point3, radius: f64) -> Mesh {
+    pub const fn new_sphere(center: Point3, radius: f64) -> Mesh {
         Mesh::Sphere(Sphere::new(center, radius))
     }
 }

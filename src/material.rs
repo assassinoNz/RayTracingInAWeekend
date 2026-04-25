@@ -1,3 +1,4 @@
+use crate::material::dielectric::Dielectric;
 use crate::material::lambertian::Lambertian;
 use crate::material::metal::Metal;
 use crate::mesh::HitRec;
@@ -15,16 +16,16 @@ pub enum Mat {
 }
 
 impl Mat {
-    pub fn new_lambertian(albedo: Color3) -> Mat {
+    pub const fn new_lambertian(albedo: Color3) -> Mat {
         Mat::Lambertian(Lambertian::new(albedo))
     }
 
-    pub fn new_metal(albedo: Color3, fuzz: f64) -> Mat {
+    pub const fn new_metal(albedo: Color3, fuzz: f64) -> Mat {
         Mat::Metal(Metal::new(albedo, fuzz))
     }
 
-    pub fn new_dielectric(rel_ref_idx: f64) -> Mat {
-        Mat::Dielectric(dielectric::Dielectric::new(rel_ref_idx))
+    pub const fn new_dielectric(rel_ref_idx: f64) -> Mat {
+        Mat::Dielectric(Dielectric::new(rel_ref_idx))
     }
 }
 
