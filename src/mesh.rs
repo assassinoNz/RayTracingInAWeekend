@@ -7,7 +7,7 @@ use crate::vec::UnitVec3;
 pub mod sphere;
 
 pub enum Mesh {
-    Sphere(Sphere)
+    Sphere(Sphere),
 }
 
 impl Mesh {
@@ -30,5 +30,5 @@ pub struct HitRec {
     pub is_front_face: bool,
 
     /** The normal against the ray direction */
-    pub normal: UnitVec3
+    pub normal: UnitVec3,
 }

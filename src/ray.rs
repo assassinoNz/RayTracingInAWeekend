@@ -1,6 +1,6 @@
+use crate::interval::Interval;
 use crate::material::ScatterRec;
 use crate::mesh::HitRec;
-use crate::interval::Interval;
 use crate::model::Model;
 use crate::point::Point3;
 use crate::vec::{Color3, Vec3};

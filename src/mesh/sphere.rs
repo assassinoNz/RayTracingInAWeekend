@@ -1,12 +1,12 @@
-use crate::mesh::HitRec;
 use crate::interval::Interval;
+use crate::mesh::HitRec;
 use crate::point::Point3;
 use crate::ray::Ray3;
 use crate::vec::UnitVec3;
 
 pub struct Sphere {
     center: Point3,
-    radius: f64
+    radius: f64,
 }
 
 impl Sphere {
@@ -54,7 +54,7 @@ impl Sphere {
                 outward_normal
             } else {
                 -outward_normal
-            }
+            },
         };
 
         Some(hit_rec)

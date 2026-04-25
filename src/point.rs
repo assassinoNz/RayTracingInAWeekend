@@ -1,7 +1,6 @@
 use std::ops::{AddAssign, SubAssign};
 
 use crate::vec::Vec3;
-use crate::util::rand_f64;
 
 pub struct Point3(Vec3);
 

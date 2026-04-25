@@ -1,6 +1,6 @@
 use crate::material::lambertian::Lambertian;
 use crate::material::metal::Metal;
-use crate::mesh::HitRec as HitRec;
+use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::vec::Color3;
 
@@ -9,7 +9,7 @@ pub mod metal;
 
 pub enum Mat {
     Lambertian(Lambertian),
-    Metal(Metal)
+    Metal(Metal),
 }
 
 impl Mat {
@@ -17,13 +17,13 @@ impl Mat {
         Mat::Lambertian(Lambertian::new(albedo))
     }
 
-    pub fn new_metal(albedo: Color3) -> Mat {
-        Mat::Metal(Metal::new(albedo))
+    pub fn new_metal(albedo: Color3, fuzz: f64) -> Mat {
+        Mat::Metal(Metal::new(albedo, fuzz))
     }
 }
 
 impl Mat {
-    pub fn scatter(&self, ray: &Ray3, hit_rec: &HitRec) -> ScatterRec {
+    pub fn scatter(&self, ray: &Ray3, hit_rec: &HitRec) -> Option<ScatterRec> {
         match self {
             Mat::Lambertian(mat) => mat.scatter(ray, hit_rec),
             Mat::Metal(mat) => mat.scatter(ray, hit_rec),
@@ -33,5 +33,5 @@ impl Mat {
 
 pub struct ScatterRec {
     pub ray: Ray3,
-    pub attenuation: Color3
+    pub attenuation: Color3,
 }
