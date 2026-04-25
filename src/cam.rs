@@ -1,12 +1,14 @@
 use crate::model::Model;
 use crate::point::Point3;
-use crate::util::rand_f64;
-use crate::vec::{Color3, Vec3};
+use crate::util::{deg_2_rad, rand_f64};
+use crate::vec::{Color3, UnitVec3, Vec3};
 
 const ASPECT_RATIO: f64 = 16.0 / 9.0;
 const IMG_WIDTH: u32 = 400;
-const VIEWPORT_HEIGHT: f64 = 2.0;
-const FOCAL_LEN: f64 = 1.0;
+const V_FOV: f64 = deg_2_rad(20.0);
+const LOOK_FROM: Point3 = Point3::new(-2.0, 2.0, 1.0);
+const LOOK_AT: Point3 = Point3::new(0.0, 0.0, -1.0);
+const V_UP: Vec3 = Vec3::new(0.0, 1.0, 0.0);
 const PIJ_SAMPLE_COUNT: u8 = 10;
 const MAX_DEPTH: u8 = 50;
 
@@ -18,6 +20,9 @@ pub struct Cam {
     p00_center: Point3,
     du: Vec3,
     dv: Vec3,
+    w: UnitVec3,
+    u: UnitVec3,
+    v: Vec3,
     pij_sample_count: u8,
     pixel_samples_scale: f64,
     max_depth: u8,
@@ -32,28 +37,36 @@ impl Cam {
             img_height as u32
         };
 
-        let viewport_width = VIEWPORT_HEIGHT * (IMG_WIDTH as f64 / img_height as f64);
+        let focal_len = (LOOK_FROM - LOOK_AT).len();
 
-        let ref vu = Vec3::new(viewport_width, 0.0, 0.0);
-        let ref vv = -Vec3::new(0.0, VIEWPORT_HEIGHT, 0.0);
-        let ref f = Vec3::new(0.0, 0.0, FOCAL_LEN);
-        let c = Point3::new_origin();
+        let viewport_height = 2.0 * (V_FOV / 2.0).tan() * focal_len;
+        let viewport_width = viewport_height * (IMG_WIDTH as f64 / img_height as f64);
 
-        //Find the upper left corner of the viewport
-        let ref v00 = &c + (-f) + (-vu / 2.0) + (-vv / 2.0);
+        let w = (&LOOK_FROM - &LOOK_AT).into_unit();
+        let u = V_UP.cross(&w).into_unit();
+        let v = w.cross(&u);
+
+        let ref vu = u.as_vec() * viewport_width;
+        let ref vv = -&v * viewport_height;
 
         //Divide the viewport into a grid of squares (virtual pixels) matching the image dimensions
         let du = vu / (IMG_WIDTH as f64);
         let dv = vv / (img_height as f64);
 
+        //Find the upper left corner of the viewport
+        let ref v00 = (LOOK_FROM - Point3::new_origin()) - (w.as_vec() * focal_len) - (vu * 0.5) - (vv * 0.5);
+
         //Find the center of the upper left virtual pixel
-        let p00_center = v00 + (&du * 0.5) + (&dv * 0.5);
+        let p00_center = Point3::from(v00 + (&du * 0.5) + (&dv * 0.5));
 
         Cam {
             aspect_ratio: ASPECT_RATIO,
             img_width: IMG_WIDTH,
             img_height,
-            c,
+            c: LOOK_FROM,
+            u,
+            v,
+            w,
             p00_center,
             du,
             dv,

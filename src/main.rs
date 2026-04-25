@@ -29,13 +29,29 @@ fn main() {
         ),
         Model(
             Mesh::new_sphere(Point3::new(-1.0, 0.0, -1.0), 0.5),
-            Mat::new_dielectric(1.0 / 1.33),
+            Mat::new_dielectric(1.5),
+        ),
+        Model(
+            Mesh::new_sphere(Point3::new(-1.0, 0.0, -1.0), 0.4),
+            Mat::new_dielectric(1.0 / 1.5),
         ),
         Model(
             Mesh::new_sphere(Point3::new(1.0, 0.0, -1.0), 0.5),
             Mat::new_metal(Color3::new(0.8, 0.6, 0.2), 1.0),
         ),
     ];
+
+    // let radius = (PI / 4.0).cos();
+    // let ref models = [
+    //     Model(
+    //         Mesh::new_sphere(Point3::new(-radius, 0.0, -1.0), radius),
+    //         Mat::new_lambertian(Color3::new(0.0, 0.0, 1.0)),
+    //     ),
+    //     Model(
+    //         Mesh::new_sphere(Point3::new(radius, 0.0, -1.0), radius),
+    //         Mat::new_lambertian(Color3::new(1.0, 0.0, 0.0)),
+    //     ),
+    // ];
 
     cam.render(models);
 }

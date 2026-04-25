@@ -12,6 +12,6 @@ pub fn schlick_reflectrance(cos: f64, rel_ref_idx: f64) -> f64 {
     r0 + (1.0 - r0) * (1.0 - cos).powi(5)
 }
 
-pub fn deg_2_rad(deg: f64) -> f64 {
+pub const fn deg_2_rad(deg: f64) -> f64 {
     deg * core::f64::consts::PI / 180.0
 }

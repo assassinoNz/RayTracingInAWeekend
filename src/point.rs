@@ -11,8 +11,8 @@ impl core::clone::Clone for Point3 {
 }
 
 impl core::convert::From<Vec3> for Point3 {
-    fn from(e: Vec3) -> Point3 {
-        Point3(e)
+    fn from(vec: Vec3) -> Point3 {
+        Point3(vec)
     }
 }
 
@@ -97,7 +97,7 @@ impl core::ops::Sub<&Point3> for &Point3 {
 }
 
 impl Point3 {
-    pub fn new(x: f64, y: f64, z: f64) -> Point3 {
+    pub const fn new(x: f64, y: f64, z: f64) -> Point3 {
         Point3(Vec3::new(x, y, z))
     }
 
