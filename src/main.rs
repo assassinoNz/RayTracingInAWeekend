@@ -1,9 +1,19 @@
-mod ds;
+mod cam;
+mod interval;
+mod material;
+mod mesh;
+mod point;
+mod ray;
 mod util;
+mod vec;
+mod model;
 
-use ds::cam::Cam;
-use ds::geom::Sphere;
-use ds::point::Point3;
+use crate::cam::Cam;
+use crate::material::Mat;
+use crate::mesh::Mesh;
+use crate::model::Model;
+use crate::point::Point3;
+use crate::vec::Color3;
 
 fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
@@ -21,11 +31,25 @@ fn main() {
         PIJ_SAMPLE_COUNT,
         MAX_DEPTH,
     );
-    
-    let ref geoms = [
-        Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5),
-        Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0),
+
+    let ref models = [
+        Model(
+            Mesh::new_sphere(Point3::new(0.0, -100.5, -1.0), 100.0),
+            Mat::new_lambertian(Color3::new(0.8, 0.8, 0.0)),
+        ),
+        Model(
+            Mesh::new_sphere(Point3::new(0.0, 0.0, -1.2), 0.5),
+            Mat::new_lambertian(Color3::new(0.1, 0.2, 0.5)),
+        ),
+        Model(
+            Mesh::new_sphere(Point3::new(-1.0, 0.0, -1.0), 0.5),
+            Mat::new_metal(Color3::new(0.8, 0.8, 0.8)),
+        ),
+        Model(
+            Mesh::new_sphere(Point3::new(1.0, 0.0, -1.0), 0.5),
+            Mat::new_metal(Color3::new(0.8, 0.6, 0.2)),
+        )
     ];
 
-    cam.render(geoms);
+    cam.render(models);
 }

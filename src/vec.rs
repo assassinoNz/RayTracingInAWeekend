@@ -1,7 +1,7 @@
 use core::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
-use crate::ds::point::Point3;
-use crate::ds::ray::Ray3;
+use crate::point::Point3;
+use crate::ray::Ray3;
 use crate::util::{rand_f64, rand_f64_clamped};
 
 #[repr(C)]
@@ -11,12 +11,6 @@ pub struct Vec3(f64, f64, f64);
 impl core::clone::Clone for Vec3 {
     fn clone(&self) -> Vec3 {
         Vec3(self.0.clone(), self.1.clone(), self.2.clone())
-    }
-}
-
-impl core::default::Default for Vec3 {
-    fn default() -> Self {
-        Self(0.0, 0.0, 0.0)
     }
 }
 
@@ -201,6 +195,24 @@ impl core::ops::Div<f64> for &Vec3 {
 }
 
 impl Vec3 {
+    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
+        Vec3(x, y, z)
+    }
+
+    pub fn new_rand() -> Vec3 {
+        Vec3(rand_f64(), rand_f64(), rand_f64())
+    }
+
+    pub fn new_rand_clamped(min: f64, max: f64) -> Vec3 {
+        Vec3(
+            rand_f64_clamped(min, max),
+            rand_f64_clamped(min, max),
+            rand_f64_clamped(min, max),
+        )
+    }
+}
+
+impl Vec3 {
     pub fn x(&self) -> f64 {
         self.0
     }
@@ -233,6 +245,11 @@ impl Vec3 {
         )
     }
 
+    pub fn is_near_zero(&self) -> bool {
+        const EPSILON: f64 = 1e-8;
+        self.0.abs() < EPSILON && self.1.abs() < EPSILON && self.2.abs() < EPSILON
+    }
+
     pub fn into_unit(self) -> UnitVec3 {
         UnitVec3(&self / self.len())
     }
@@ -242,39 +259,7 @@ impl Vec3 {
     }
 }
 
-impl Vec3 {
-    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3(x, y, z)
-    }
-
-    pub fn new_rand() -> Vec3 {
-        Vec3(rand_f64(), rand_f64(), rand_f64())
-    }
-
-    pub fn new_rand_clamped(min: f64, max: f64) -> Vec3 {
-        Vec3(
-            rand_f64_clamped(min, max),
-            rand_f64_clamped(min, max),
-            rand_f64_clamped(min, max),
-        )
-    }
-}
-
 pub type Color3 = Vec3;
-
-impl Color3 {
-    pub fn r(&self) -> f64 {
-        self.x()
-    }
-
-    pub fn g(&self) -> f64 {
-        self.y()
-    }
-
-    pub fn b(&self) -> f64 {
-        self.z()
-    }
-}
 
 impl Color3 {
     pub fn new_black() -> Color3 {
@@ -295,6 +280,30 @@ impl Color3 {
 
     pub fn new_blue() -> Color3 {
         Vec3(0.0, 0.0, 1.0)
+    }
+}
+
+impl Color3 {
+    pub fn r(&self) -> f64 {
+        self.x()
+    }
+
+    pub fn g(&self) -> f64 {
+        self.y()
+    }
+
+    pub fn b(&self) -> f64 {
+        self.z()
+    }
+
+    pub fn into_gamma_corrected(mut self) -> Color3 {
+        self.0 = if self.0 > 0.0 { self.0.sqrt() } else { 0.0 };
+
+        self.1 = if self.1 > 0.0 { self.1.sqrt() } else { 0.0 };
+
+        self.2 = if self.2 > 0.0 { self.2.sqrt() } else { 0.0 };
+
+        self
     }
 }
 
@@ -328,16 +337,6 @@ impl core::ops::Neg for &UnitVec3 {
 }
 
 impl UnitVec3 {
-    pub fn as_vec(&self) -> &Vec3 {
-        &self.0
-    }
-
-    pub fn into_ray(self, origin: Point3) -> Ray3 {
-        Ray3::new(origin, self.0)
-    }
-}
-
-impl UnitVec3 {
     pub unsafe fn new_unchecked(vec: Vec3) -> Self {
         Self(vec)
     }
@@ -350,5 +349,19 @@ impl UnitVec3 {
                 return UnitVec3(rand_clamped_vec / len_sq.sqrt());
             }
         }
+    }
+}
+
+impl UnitVec3 {
+    pub fn as_vec(&self) -> &Vec3 {
+        &self.0
+    }
+
+    pub fn into_ray(self, origin: Point3) -> Ray3 {
+        Ray3::new(origin, self.0)
+    }
+
+    pub fn reflect(&self, vec: &Vec3) -> Vec3 {
+        vec - (&self.0 * 2.0 * self.dot(vec))
     }
 }

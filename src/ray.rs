@@ -1,11 +1,19 @@
-use crate::ds::hittable::{HitRecord, Hittable};
-use crate::ds::interval::Interval;
-use crate::ds::point::Point3;
-use crate::ds::vec::{Color3, UnitVec3, Vec3};
+use crate::material::ScatterRec;
+use crate::mesh::HitRec;
+use crate::interval::Interval;
+use crate::model::Model;
+use crate::point::Point3;
+use crate::vec::{Color3, Vec3};
 
 pub struct Ray3 {
     origin: Point3,
     vec: Vec3,
+}
+
+impl Ray3 {
+    pub fn new(origin: Point3, vec: Vec3) -> Ray3 {
+        Ray3 { origin, vec }
+    }
 }
 
 impl Ray3 {
@@ -24,34 +32,32 @@ impl Ray3 {
         &self.origin + (&self.vec * step)
     }
 
-    pub fn calc_color(&self, hittables: &[impl Hittable], depth: u8) -> Color3 {
+    /**
+     * Finds and hits the camera-closest model in the scene and uses the result's scatter record to calculate the color
+     */
+    pub fn calc_color(&self, models: &[Model], depth: u8) -> Color3 {
         if depth == 0 {
             return Color3::new_black();
         }
 
-        let mut closest_hit_rec: Option<HitRecord> = None;
+        let mut closest_hit_res: Option<(HitRec, ScatterRec)> = None;
         let mut closest_hit_distance = f64::INFINITY;
 
-        for hittable in hittables {
+        for model in models {
             //NOTE: Hit range starts at 0.001 to prevent shadow acne
             let ref hit_range = Interval::new(0.001, closest_hit_distance);
 
-            if let Some(hit_rec) = hittable.hit(self, hit_range) {
+            if let Some(hit_res) = model.hit(self, hit_range) {
                 //CASE: A closer hit that the previous was found
-                closest_hit_distance = hit_rec.distance;
-                closest_hit_rec = Some(hit_rec);
+                closest_hit_distance = hit_res.0.distance;
+                closest_hit_res = Some(hit_res);
             }
         }
 
-        let ray_color = if let Some(hit_rec) = closest_hit_rec {
+        let ray_color = if let Some((_, scatter_rec)) = closest_hit_res {
             //CASE: A hit result was found
-            //Pixel must represent the color of the ray
-
-            let bounce_vec = UnitVec3::new_rand().as_vec() + hit_rec.normal.as_vec();
-
-            let ref bounce_ray = bounce_vec.into_ray(hit_rec.point);
-            let ray_color = bounce_ray.calc_color(hittables, depth - 1);
-            ray_color * 0.5
+            //Pixel must represent the color of the scattered ray
+            scatter_rec.ray.calc_color(models, depth - 1) * scatter_rec.attenuation
         } else {
             //CASE: No hit result was found
             //Consider the pixel as representing the background color
@@ -61,11 +67,5 @@ impl Ray3 {
         };
 
         ray_color
-    }
-}
-
-impl Ray3 {
-    pub fn new(origin: Point3, vec: Vec3) -> Ray3 {
-        Ray3 { origin, vec }
     }
 }

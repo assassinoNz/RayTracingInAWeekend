@@ -1,9 +1,7 @@
-use crate::ds::hittable::{HitRecord as HitRecord, Hittable};
-use crate::ds::interval::Interval;
-use crate::ds::point::Point3;
-use crate::ds::ray::Ray3;
-use crate::ds::vec::{Color3, UnitVec3, Vec3};
-use crate::util::rand_f64;
+use crate::model::Model;
+use crate::point::Point3;
+use crate::vec::{Color3, Vec3};
+use crate::util::{rand_f64};
 
 pub struct Cam {
     aspect_ratio: f64,
@@ -66,8 +64,9 @@ impl Cam {
     }
 }
 
+
 impl Cam {
-    pub fn render(&self, hittables: &[impl Hittable]) {
+    pub fn render(&self, models: &[Model]) {
         println!("P3\n{} {}\n255", self.img_width, self.img_height);
 
         for j in 0..self.img_height {
@@ -90,15 +89,18 @@ impl Cam {
                 let mut pij_color: Color3 = Color3::new_black();
                 for pij_sample in &pij_samples {
                     let ref ray = (pij_sample - &self.c).into_ray(self.c.clone());
-                    pij_color = pij_color + ray.calc_color(hittables, self.max_depth);
+                    pij_color = pij_color + ray.calc_color(models, self.max_depth);
                 }
                 pij_color /= self.pij_sample_count as f64;
 
+                //Gamma correct
+                let pij_color: Color3 = pij_color.into_gamma_corrected();
+
                 //Print pij color
-                let ir = (256.0 * pij_color.r().clamp(0.0, 0.999)) as u8;
-                let ig = (256.0 * pij_color.g().clamp(0.0, 0.999)) as u8;
-                let ib = (256.0 * pij_color.b().clamp(0.0, 0.999)) as u8;
-                println!("{ir} {ig} {ib}");
+                let r_byte = (256.0 * pij_color.r().clamp(0.0, 0.999)) as u8;
+                let g_byte = (256.0 * pij_color.g().clamp(0.0, 0.999)) as u8;
+                let b_byte = (256.0 * pij_color.b().clamp(0.0, 0.999)) as u8;
+                println!("{r_byte} {g_byte} {b_byte}");
             }
         }
     }

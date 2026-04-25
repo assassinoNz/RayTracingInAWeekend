@@ -1,12 +1,12 @@
-use crate::ds::hittable::{HitRecord, Hittable};
-use crate::ds::interval::Interval;
-use crate::ds::point::Point3;
-use crate::ds::ray::Ray3;
-use crate::ds::vec::UnitVec3;
+use crate::mesh::HitRec;
+use crate::interval::Interval;
+use crate::point::Point3;
+use crate::ray::Ray3;
+use crate::vec::UnitVec3;
 
 pub struct Sphere {
     center: Point3,
-    radius: f64,
+    radius: f64
 }
 
 impl Sphere {
@@ -15,8 +15,8 @@ impl Sphere {
     }
 }
 
-impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray3, hit_range: &Interval) -> Option<HitRecord> {
+impl Sphere {
+    pub fn hit(&self, ray: &Ray3, hit_range: &Interval) -> Option<HitRec> {
         let ref oc = &self.center - ray.origin();
         let a = ray.vec().len_sq();
         let h = ray.vec().dot(oc);
@@ -46,7 +46,7 @@ impl Hittable for Sphere {
             unsafe { UnitVec3::new_unchecked((&hit_point - &self.center) / self.radius) };
         let is_front_face = ray.vec().dot(&outward_normal) < 0.0;
 
-        let hit_rec = HitRecord {
+        let hit_rec = HitRec {
             distance: hit_distance,
             point: hit_point,
             is_front_face,
@@ -54,7 +54,7 @@ impl Hittable for Sphere {
                 outward_normal
             } else {
                 -outward_normal
-            },
+            }
         };
 
         Some(hit_rec)
