@@ -5,12 +5,14 @@ use crate::vec::{Color3, UnitVec3, Vec3};
 
 const ASPECT_RATIO: f64 = 16.0 / 9.0;
 const IMG_WIDTH: u32 = 400;
-const V_FOV: f64 = deg_2_rad(20.0);
+const V_FOV: f64 = 20.0;
 const LOOK_FROM: Point3 = Point3::new(-2.0, 2.0, 1.0);
 const LOOK_AT: Point3 = Point3::new(0.0, 0.0, -1.0);
 const V_UP: Vec3 = Vec3::new(0.0, 1.0, 0.0);
 const PIJ_SAMPLE_COUNT: u8 = 10;
 const MAX_DEPTH: u8 = 50;
+const DEFOCUS_ANGLE: f64 = 10.0;
+const FOCUS_DIST: f64 = 3.4;
 
 pub struct Cam {
     aspect_ratio: f64,
@@ -26,6 +28,9 @@ pub struct Cam {
     pij_sample_count: u8,
     pixel_samples_scale: f64,
     max_depth: u8,
+    defocus_angle: f64,
+    defocus_disk_u: Vec3,
+    defocus_disk_v: Vec3,
 }
 
 impl Cam {
@@ -37,9 +42,7 @@ impl Cam {
             img_height as u32
         };
 
-        let focal_len = (LOOK_FROM - LOOK_AT).len();
-
-        let viewport_height = 2.0 * (V_FOV / 2.0).tan() * focal_len;
+        let viewport_height = 2.0 * (deg_2_rad(V_FOV) / 2.0).tan() * FOCUS_DIST;
         let viewport_width = viewport_height * (IMG_WIDTH as f64 / img_height as f64);
 
         let w = (&LOOK_FROM - &LOOK_AT).into_unit();
@@ -54,10 +57,18 @@ impl Cam {
         let dv = vv / (img_height as f64);
 
         //Find the upper left corner of the viewport
-        let ref v00 = (LOOK_FROM - Point3::new_origin()) - (w.as_vec() * focal_len) - (vu * 0.5) - (vv * 0.5);
+        let ref v00 = (LOOK_FROM - Point3::new_origin())
+            - (w.as_vec() * FOCUS_DIST)
+            - (vu * 0.5)
+            - (vv * 0.5);
 
         //Find the center of the upper left virtual pixel
-        let p00_center = Point3::from(v00 + (&du * 0.5) + (&dv * 0.5));
+        let p00_center = Point3::from(v00 + (&du + &dv) * 0.5);
+
+        //Find the defocus params
+        let defocus_r = FOCUS_DIST * deg_2_rad(DEFOCUS_ANGLE / 2.0).tan();
+        let defocus_disk_u = u.as_vec() * defocus_r;
+        let defocus_disk_v = &v * defocus_r;
 
         Cam {
             aspect_ratio: ASPECT_RATIO,
@@ -73,6 +84,9 @@ impl Cam {
             pij_sample_count: PIJ_SAMPLE_COUNT,
             pixel_samples_scale: 1.0 / PIJ_SAMPLE_COUNT as f64,
             max_depth: MAX_DEPTH,
+            defocus_angle: DEFOCUS_ANGLE,
+            defocus_disk_u,
+            defocus_disk_v,
         }
     }
 }
@@ -86,16 +100,22 @@ impl Cam {
                 let i = i as f64;
                 let j = j as f64;
 
-                let pij_samples: [Point3; PIJ_SAMPLE_COUNT as usize] = std::array::from_fn(|_| {
-                    let px = i + rand_f64() - 0.5;
-                    let py = j + rand_f64() - 0.5;
-                    &self.p00_center + (&self.du * px) + (&self.dv * py)
-                });
-
                 //Calculate the average color of pij
                 let mut pij_color: Color3 = Color3::new_black();
-                for pij_sample in &pij_samples {
-                    let ref ray = (pij_sample - &self.c).into_ray(self.c.clone());
+                for _ in 0..self.pij_sample_count {
+                    let px = i + rand_f64() - 0.5;
+                    let py = j + rand_f64() - 0.5;
+                    let pij_sample = &self.p00_center + (&self.du * px) + (&self.dv * py);
+
+                    let ray_origin = if self.defocus_angle <= 0.0 {
+                        self.c.clone()
+                    } else {
+                        let rand_point = Point3::new_rand_in_unit_circ();
+                        &self.c
+                            + (&self.defocus_disk_u * rand_point.x())
+                            + (&self.defocus_disk_v * rand_point.y())
+                    };
+                    let ref ray = (pij_sample - &ray_origin).into_ray(ray_origin);
                     pij_color = pij_color + ray.calc_color(models, self.max_depth);
                 }
                 pij_color /= self.pij_sample_count as f64;

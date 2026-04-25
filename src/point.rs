@@ -1,6 +1,6 @@
 use std::ops::{AddAssign, SubAssign};
 
-use crate::vec::Vec3;
+use crate::{util::rand_f64_clamped, vec::Vec3};
 
 pub struct Point3(Vec3);
 
@@ -103,6 +103,19 @@ impl Point3 {
 
     pub fn new_origin() -> Point3 {
         Point3(Vec3::new(0.0, 0.0, 0.0))
+    }
+
+    pub fn new_rand_in_unit_circ() -> Point3 {
+        loop {
+            let rand_vec_clamped = Vec3::new(
+                rand_f64_clamped(-1.0, 1.0),
+                rand_f64_clamped(-1.0, 1.0),
+                0.0,
+            );
+            if rand_vec_clamped.len_sq() < 1.0 {
+                return Point3::from(rand_vec_clamped);
+            }
+        }
     }
 }
 
