@@ -6,10 +6,12 @@ use crate::vec::Color3;
 
 pub mod lambertian;
 pub mod metal;
+pub mod dielectric;
 
 pub enum Mat {
     Lambertian(Lambertian),
     Metal(Metal),
+    Dielectric(dielectric::Dielectric),
 }
 
 impl Mat {
@@ -20,6 +22,10 @@ impl Mat {
     pub fn new_metal(albedo: Color3, fuzz: f64) -> Mat {
         Mat::Metal(Metal::new(albedo, fuzz))
     }
+
+    pub fn new_dielectric(refract_idx: f64) -> Mat {
+        Mat::Dielectric(dielectric::Dielectric::new(refract_idx))
+    }
 }
 
 impl Mat {
@@ -27,6 +33,7 @@ impl Mat {
         match self {
             Mat::Lambertian(mat) => mat.scatter(ray, hit_rec),
             Mat::Metal(mat) => mat.scatter(ray, hit_rec),
+            Mat::Dielectric(mat) => mat.scatter(ray, hit_rec),
         }
     }
 }

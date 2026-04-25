@@ -364,4 +364,11 @@ impl UnitVec3 {
     pub fn reflect(&self, vec: &Vec3) -> Vec3 {
         vec - (&self.0 * 2.0 * self.dot(vec))
     }
+
+    pub fn refract(&self, vec: &Vec3, ni_div_nt: f64) -> Vec3 {
+        let cos_theta = (-self.dot(vec)).min(1.0);
+        let r_out_perp = (&self.0 + (vec * cos_theta)) * ni_div_nt;
+        let r_out_parallel = -vec * (1.0 - r_out_perp.len_sq()).abs().sqrt();
+        r_out_perp + r_out_parallel
+    }
 }
