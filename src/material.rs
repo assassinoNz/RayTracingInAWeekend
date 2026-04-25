@@ -23,8 +23,8 @@ impl Mat {
         Mat::Metal(Metal::new(albedo, fuzz))
     }
 
-    pub fn new_dielectric(refract_idx: f64) -> Mat {
-        Mat::Dielectric(dielectric::Dielectric::new(refract_idx))
+    pub fn new_dielectric(rel_ref_idx: f64) -> Mat {
+        Mat::Dielectric(dielectric::Dielectric::new(rel_ref_idx))
     }
 }
 

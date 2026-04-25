@@ -29,7 +29,7 @@ fn main() {
         ),
         Model(
             Mesh::new_sphere(Point3::new(-1.0, 0.0, -1.0), 0.5),
-            Mat::new_dielectric(1.5),
+            Mat::new_dielectric(1.0 / 1.33),
         ),
         Model(
             Mesh::new_sphere(Point3::new(1.0, 0.0, -1.0), 0.5),
