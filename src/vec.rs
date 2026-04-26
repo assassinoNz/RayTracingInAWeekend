@@ -34,7 +34,7 @@ impl core::ops::Neg for &Vec3 {
 }
 
 impl core::ops::SubAssign<&Vec3> for Vec3 {
-    fn sub_assign(&mut self, rhs: &Self) {
+    fn sub_assign(&mut self, rhs: &Vec3) {
         self.0 -= rhs.0;
         self.1 -= rhs.1;
         self.2 -= rhs.2;
@@ -44,7 +44,7 @@ impl core::ops::SubAssign<&Vec3> for Vec3 {
 impl core::ops::Sub<Vec3> for Vec3 {
     type Output = Vec3;
 
-    fn sub(mut self, rhs: Self) -> Vec3 {
+    fn sub(mut self, rhs: Vec3) -> Vec3 {
         self.sub_assign(&rhs);
         self
     }
