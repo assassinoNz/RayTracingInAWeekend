@@ -5,9 +5,9 @@ use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::vec::Color3;
 
+pub mod dielectric;
 pub mod lambertian;
 pub mod metal;
-pub mod dielectric;
 
 pub enum Mat {
     Lambertian(Lambertian),
