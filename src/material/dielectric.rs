@@ -1,4 +1,4 @@
-use crate::material::ScatterRec;
+use crate::material::{Mat, ScatterRec};
 use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::util::{rand_f64, schlick_reflectrance};
@@ -12,8 +12,8 @@ pub struct Dielectric {
 }
 
 impl Dielectric {
-    pub const fn new(rel_ref_idx: f64) -> Dielectric {
-        Dielectric { rel_ref_idx }
+    pub const fn new(rel_ref_idx: f64) -> Mat {
+        Mat::Dielectric(Dielectric { rel_ref_idx })
     }
 }
 

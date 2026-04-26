@@ -1,32 +1,18 @@
-use crate::material::dielectric::Dielectric;
-use crate::material::lambertian::Lambertian;
-use crate::material::metal::Metal;
 use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::vec::Color3;
 
-pub mod dielectric;
-pub mod lambertian;
-pub mod metal;
+mod dielectric;
+pub use dielectric::*;
+mod lambertian;
+pub use lambertian::*;
+mod metal;
+pub use metal::*;
 
 pub enum Mat {
     Lambertian(Lambertian),
     Metal(Metal),
     Dielectric(dielectric::Dielectric),
-}
-
-impl Mat {
-    pub const fn new_lambertian(albedo: Color3) -> Mat {
-        Mat::Lambertian(Lambertian::new(albedo))
-    }
-
-    pub const fn new_metal(albedo: Color3, fuzz: f64) -> Mat {
-        Mat::Metal(Metal::new(albedo, fuzz))
-    }
-
-    pub const fn new_dielectric(rel_ref_idx: f64) -> Mat {
-        Mat::Dielectric(Dielectric::new(rel_ref_idx))
-    }
 }
 
 impl Mat {

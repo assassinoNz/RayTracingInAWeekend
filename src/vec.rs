@@ -14,6 +14,19 @@ impl core::clone::Clone for Vec3 {
     }
 }
 
+impl core::ops::Index<usize> for Vec3 {
+    type Output = f64;
+
+    fn index(&self, index: usize) -> &f64 {
+        match index {
+            0 => &self.0,
+            1 => &self.1,
+            2 => &self.2,
+            _ => panic!("Index out of bounds for Vec3"),
+        }
+    }
+}
+
 impl core::ops::Neg for Vec3 {
     type Output = Vec3;
 

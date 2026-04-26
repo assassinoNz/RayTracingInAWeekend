@@ -1,4 +1,4 @@
-use crate::interval::Interval;
+use crate::bound::Interval;
 use crate::material::ScatterRec;
 use crate::mesh::HitRec;
 use crate::model::Model;

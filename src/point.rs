@@ -131,4 +131,8 @@ impl Point3 {
     pub fn z(&self) -> f64 {
         self.0.z()
     }
+
+    pub fn as_vec(&self) -> &Vec3 {
+        &self.0
+    }
 }

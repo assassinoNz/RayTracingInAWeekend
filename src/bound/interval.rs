@@ -24,6 +24,14 @@ impl Interval {
 }
 
 impl Interval {
+    pub fn start(&self) -> f64 {
+        self.start
+    }
+
+    pub fn end(&self) -> f64 {
+        self.end
+    }
+
     pub fn len(&self) -> f64 {
         self.end - self.start
     }
@@ -43,6 +51,14 @@ impl Interval {
             self.end
         } else {
             x
+        }
+    }
+
+    pub fn expand(&mut self, x: f64) {
+        if x < self.start {
+            self.start = x;
+        } else if x > self.end {
+            self.end = x;
         }
     }
 }

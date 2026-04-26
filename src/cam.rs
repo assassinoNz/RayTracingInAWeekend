@@ -9,8 +9,8 @@ const V_FOV: f64 = 20.0;
 const LOOK_FROM: Point3 = Point3::new(13.0, 2.0, 3.0);
 const LOOK_AT: Point3 = Point3::new(0.0, 0.0, 0.0);
 const V_UP: Vec3 = Vec3::new(0.0, 1.0, 0.0);
-const PIJ_SAMPLE_COUNT: u16 = 500;
-const MAX_DEPTH: u8 = 50;
+const PIJ_SAMPLE_COUNT: u16 = 10;
+const MAX_DEPTH: u8 = 5;
 const DEFOCUS_ANGLE: f64 = 0.6;
 const FOCUS_DIST: f64 = 10.0;
 

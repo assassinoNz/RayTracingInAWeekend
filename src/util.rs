@@ -1,4 +1,7 @@
-use crate::{point::Point3, vec::{UnitVec3, Vec3}};
+use crate::{
+    point::Point3,
+    vec::{UnitVec3, Vec3},
+};
 
 pub fn rand_f64() -> f64 {
     rand::random_range(0.0..1.0)

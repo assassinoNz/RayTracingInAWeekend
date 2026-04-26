@@ -1,4 +1,4 @@
-use crate::interval::Interval;
+use crate::bound::Interval;
 use crate::material::{Mat, ScatterRec};
 use crate::mesh::{HitRec, Mesh};
 use crate::ray::Ray3;

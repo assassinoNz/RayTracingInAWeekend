@@ -1,4 +1,4 @@
-use crate::material::ScatterRec;
+use crate::material::{Mat, ScatterRec};
 use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::vec::{Color3, UnitVec3};
@@ -9,8 +9,8 @@ pub struct Metal {
 }
 
 impl Metal {
-    pub const fn new(albedo: Color3, fuzz: f64) -> Metal {
-        Metal { albedo, fuzz }
+    pub const fn new(albedo: Color3, fuzz: f64) -> Mat {
+        Mat::Metal(Metal { albedo, fuzz })
     }
 }
 

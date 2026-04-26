@@ -1,4 +1,4 @@
-use crate::material::ScatterRec;
+use crate::material::{Mat, ScatterRec};
 use crate::mesh::HitRec;
 use crate::ray::Ray3;
 use crate::vec::{Color3, UnitVec3};
@@ -8,8 +8,8 @@ pub struct Lambertian {
 }
 
 impl Lambertian {
-    pub const fn new(albedo: Color3) -> Lambertian {
-        Lambertian { albedo }
+    pub const fn new(albedo: Color3) -> Mat {
+        Mat::Lambertian(Lambertian { albedo })
     }
 }
 

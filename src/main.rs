@@ -1,5 +1,5 @@
+mod bound;
 mod cam;
-mod interval;
 mod material;
 mod mesh;
 mod model;
@@ -9,8 +9,8 @@ mod util;
 mod vec;
 
 use crate::cam::Cam;
-use crate::material::Mat;
-use crate::mesh::Mesh;
+use crate::material::{Dielectric, Lambertian, Metal};
+use crate::mesh::Sphere;
 use crate::model::Model;
 use crate::point::Point3;
 use crate::util::rand_f64;
@@ -51,8 +51,8 @@ fn rand_scene() -> [Model; MAX_MODELS] {
     // Initialize with a dummy or default Model (requires manual Default or similar)
     let mut models = [const {
         Model(
-            Mesh::new_sphere(Point3::new(0.0, 0.0, 0.0), 0.0),
-            Mat::new_lambertian(Color3::new(0.0, 0.0, 0.0)),
+            Sphere::new(Point3::new(0.0, 0.0, 0.0), 0.0),
+            Lambertian::new(Color3::new(0.0, 0.0, 0.0)),
         )
     }; MAX_MODELS];
 
@@ -60,8 +60,8 @@ fn rand_scene() -> [Model; MAX_MODELS] {
 
     // 1. Add Ground
     models[count] = Model(
-        Mesh::new_sphere(Point3::new(0.0, -1000.0, 0.0), 1000.0),
-        Mat::new_lambertian(Color3::new(0.5, 0.5, 0.5)),
+        Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0),
+        Lambertian::new(Color3::new(0.5, 0.5, 0.5)),
     );
     count += 1;
 
@@ -80,18 +80,18 @@ fn rand_scene() -> [Model; MAX_MODELS] {
                 let mat = if choose_mat < 0.8 {
                     // Diffuse
                     let albedo = Color3::new_rand() * Color3::new_rand();
-                    Mat::new_lambertian(albedo)
+                    Lambertian::new(albedo)
                 } else if choose_mat < 0.95 {
                     // Metal
                     let albedo = Color3::new_rand_clamped(0.5, 1.0);
                     let fuzz = rand_f64() * 0.5;
-                    Mat::new_metal(albedo, fuzz)
+                    Metal::new(albedo, fuzz)
                 } else {
                     // Glass
-                    Mat::new_dielectric(1.5)
+                    Dielectric::new(1.5)
                 };
 
-                models[count] = Model(Mesh::new_sphere(center, 0.2), mat);
+                models[count] = Model(Sphere::new(center, 0.2), mat);
                 count += 1;
             }
         }
@@ -99,20 +99,20 @@ fn rand_scene() -> [Model; MAX_MODELS] {
 
     // 3. Add Three Large Spheres
     models[count] = Model(
-        Mesh::new_sphere(Point3::new(0.0, 1.0, 0.0), 1.0),
-        Mat::new_dielectric(1.5),
+        Sphere::new(Point3::new(0.0, 1.0, 0.0), 1.0),
+        Dielectric::new(1.5),
     );
     count += 1;
 
     models[count] = Model(
-        Mesh::new_sphere(Point3::new(-4.0, 1.0, 0.0), 1.0),
-        Mat::new_lambertian(Color3::new(0.4, 0.2, 0.1)),
+        Sphere::new(Point3::new(-4.0, 1.0, 0.0), 1.0),
+        Lambertian::new(Color3::new(0.4, 0.2, 0.1)),
     );
     count += 1;
 
     models[count] = Model(
-        Mesh::new_sphere(Point3::new(4.0, 1.0, 0.0), 1.0),
-        Mat::new_metal(Color3::new(0.7, 0.6, 0.5), 0.0),
+        Sphere::new(Point3::new(4.0, 1.0, 0.0), 1.0),
+        Metal::new(Color3::new(0.7, 0.6, 0.5), 0.0),
     );
 
     models

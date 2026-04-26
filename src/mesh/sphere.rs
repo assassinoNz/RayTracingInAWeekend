@@ -1,5 +1,5 @@
-use crate::interval::Interval;
-use crate::mesh::HitRec;
+use crate::bound::Interval;
+use crate::mesh::{HitRec, Mesh};
 use crate::point::Point3;
 use crate::ray::Ray3;
 use crate::vec::UnitVec3;
@@ -10,8 +10,8 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub const fn new(center: Point3, radius: f64) -> Sphere {
-        Sphere { center, radius }
+    pub const fn new(center: Point3, radius: f64) -> Mesh {
+        Mesh::Sphere(Sphere { center, radius })
     }
 }
 

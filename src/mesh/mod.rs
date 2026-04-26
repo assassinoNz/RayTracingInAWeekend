@@ -1,19 +1,13 @@
-use crate::interval::Interval;
-use crate::mesh::sphere::Sphere;
+use crate::bound::Interval;
 use crate::point::Point3;
 use crate::ray::Ray3;
 use crate::vec::UnitVec3;
 
-pub mod sphere;
+mod sphere;
+pub use sphere::*;
 
 pub enum Mesh {
     Sphere(Sphere),
-}
-
-impl Mesh {
-    pub const fn new_sphere(center: Point3, radius: f64) -> Mesh {
-        Mesh::Sphere(Sphere::new(center, radius))
-    }
 }
 
 impl Mesh {
